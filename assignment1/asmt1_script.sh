@@ -6,7 +6,7 @@ make
 sudo insmod jiffies.ko
 sudo insmod seconds.ko
 lsmod | head
-sleep 10
+sleep 8
 cat /proc/jiffies
 cat /proc/seconds
 sudo rmmod jiffies

@@ -44,9 +44,13 @@ ssize_t proc_read(struct file *file, char __user *usr_buf, size_t count, loff_t 
   rv = sprintf(buffer, "Elapsed seconds: %lld\n", elapsed_seconds);
   
   // copies the contents of buffer to userspace usr_buf
-  copy_to_user(usr_buf, buffer, rv);
+  long bytes_not_copied = copy_to_user(usr_buf, buffer, rv);
   
-  return rv;
+  if (bytes_not_copied == 0) {
+      return rv;  // all bytes copied successfully
+  } else {
+      return rv - bytes_not_copied;  // partial copy
+  }
 }
 
 module_init(seconds_init);
