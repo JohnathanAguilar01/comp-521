@@ -136,18 +136,26 @@ function resize_partition {
 } # end function
 
 # ################################################################
-# # Delete partition
-# function delete_partition {
-# param ($ptable)
-# 
-# # prompt for volume (to be used as hash key)
-# # check if drive partition does not already exists--if not, exit
-# 
-# # Remove key and contents from hash & output message
-# 
-# return $ptable
-# } # end function
-# 
+# Delete partition
+function delete_partition {
+	param ($ptable)
+
+	# prompt for volume (to be used as hash key)
+	# check if drive partition does not already exists--if not, exit
+    Write-Host ""
+    $drive = Read-Host "Enter Volume (Drive letter)"
+    if ($ptable.ContainsKey($drive)) {
+		# Remove key and contents from hash & output message
+        $ptable.Remove($drive)
+        Write-Host "Partition on drive $drive has been deleted"
+    }
+    else {
+        Write-Host "No partition exists on drive $drive"
+    }
+
+	return $ptable
+} # end function
+
 # ################################################################
 # Print partition table
 function list_partitions {
@@ -211,7 +219,7 @@ while ($true) {
     switch ($choice) {
         "create" { $ptable = create_partition $ptable }
         "resize" { $ptable = resize_partition $ptable }
-        # "delete" { $ptable = Delete-Partition $ptable }
+        "delete" { $ptable = delete_partition $ptable }
         "list"   { $ptable = list_partitions $ptable }
         # "quit"   { break }
         default { Write-Host "Invalid option" }
